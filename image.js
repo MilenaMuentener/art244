@@ -1,4 +1,4 @@
-let img
+let img, img1, img2
 
 
 function preload()
