@@ -2,6 +2,10 @@ let img
 let audio
 
 
+let amp
+let rms
+
+
 
 function preload()
 {
@@ -18,6 +22,14 @@ createCanvas(displayWidth,displayHeight);
 button= createButton("Toogle Sound")
   button.position(50,38)
 
+button2 = createImg("./assets/playpause.png")
+button2.size(40,40)
+button2.position(55,55)
+
+amp = new p5.Amplitude ()
+amp.setInput(audio)
+
+
 }
 
 function draw() {
@@ -26,6 +38,11 @@ background(255,255,255);
 image(img,100,100, img.width/4, img.height/4)
 
 button.mouseClicked(togglesound)
+button2.mouseClicked(togglesound)
+
+rms = amp.getlevel()
+console.log(rms)
+
 
 
 
