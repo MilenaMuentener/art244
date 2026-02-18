@@ -3,21 +3,159 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Room</title>
-  <style> body{margin:0; overflow:hidden; background:#111;} </style>
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  <title>Talking Walls</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      font-family: system-ui;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    #hint {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      color: #fff;
+      z-index: 20;
+    }
+
+    /* ---- Concept Overlay ---- */
+    .concept-panel {
+      position: fixed;
+      right: 50px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28vw; /* ~1/4 of screen */
+      max-width: 420px;
+      background: rgba(251, 250, 250, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      color: #000;
+      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+      z-index: 30;
+    }
+
+    .concept-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .concept-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: #000;
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+
+    .close-btn:hover {
+      background: rgba(0,0,0,0.08);
+    }
+
+    .concept-body {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .concept-body p {
+      margin-bottom: 12px;
+    }
+
+    /* Mobile fallback */
+    @media (max-width: 900px) {
+      .concept-panel {
+        width: 85vw;
+        right: 50%;
+        transform: translate(50%, -50%);
       }
     }
-    </script>
+  </style>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
+
 <body>
-  <div id="hint" style="position:fixed;top:16px;left:16px;color:#fff;font-family:system-ui;">
-    Click to start
+
+  <div id="hint">Click to start</div>
+
+  <!-- Concept Overlay -->
+  <div class="concept-panel" id="conceptPanel">
+    <div class="concept-header">
+      <h2 class="concept-title">Talking Walls</h2>
+      <button class="close-btn" id="closeConcept">✕</button>
+    </div>
+
+    <div class="concept-body">
+      <p>
+        This interactive audio visual artwork explores the feeling of pressure inside a
+        closed room. The digital 3D room is the main visual element. Traditionally, a
+        room functions as a symbol of safety, privacy, and protection. In this piece,
+        that symbol is questioned and transformed.
+      </p>
+
+      <p>
+        When the viewer enters the webpage, the room appears calm and stable.
+        Only after clicking does the sound begin. The soundscape consists of muffled
+        voices, loud talking, and the distant sound of a child crying. Everything feels
+        as if it is happening behind a wall. The words are not clearly understandable,
+        but their presence is clearly noticeable.
+      </p>
+
+      <p>
+        From a semiotic perspective, the room acts as a signifier of stability and
+        shelter. The voices function as another sign that represents social or
+        emotional pressure. The interpretant is a feeling of tension and claustrophobia.
+      </p>
+
+      <p>
+        As the volume increases, the walls move inward from the sides. This reaction
+        is not realistic architecture but a symbolic translation of sound into space.
+        The louder the voices become, the smaller the room feels. In this way, the
+        sound becomes an index of pressure because it directly causes the visual change.
+      </p>
+
+      <p>
+        Without the sound, the room appears neutral and safe. Without the visual
+        space, the voices remain abstract. Only together do they form a complete
+        semiotic system.
+      </p>
+    </div>
   </div>
+
   <script type="module" src="./room.js"></script>
+
+  <script>
+    const panel = document.getElementById("conceptPanel");
+    const closeBtn = document.getElementById("closeConcept");
+
+    closeBtn.addEventListener("click", () => {
+      panel.style.display = "none";
+    });
+  </script>
+
 </body>
 </html>

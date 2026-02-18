@@ -287,10 +287,10 @@ function animate() {
   applyScaleAroundCamera(scale);
 
   // Optional: look -> audio filter only
-  if (lowpass) {
-    const look = Math.min(1, (Math.abs(yaw) + Math.abs(pitch)) / Math.PI);
-    lowpass.frequency.value = clamp(700 + look * 1700, 700, 2600);
-  }
+  //if (lowpass) {
+   // const look = Math.min(1, (Math.abs(yaw) + Math.abs(pitch)) / Math.PI);
+    //lowpass.frequency.value = clamp(700 + look * 1700, 700, 2600);
+  //}
 
   renderer.render(scene, camera);
 }
