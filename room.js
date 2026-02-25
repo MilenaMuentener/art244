@@ -3,7 +3,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 let scene, camera, renderer;
 
-// NEW: pivot that sits at the camera position (we scale THIS)
+// Pivot that sits at the camera position (we scale THIS)
 let roomPivot = null;
 
 // Room container (GLB lives inside this)
@@ -28,20 +28,21 @@ let pitch = 0;
 const DRAG_SENSITIVITY = 0.006;
 const PITCH_LIMIT = Math.PI / 2 - 0.08;
 
-// --- “CLAUSTRO / TALKING WALLS” knobs ---
-const VOLUME_BOOST = 7.0;   // weniger stark
-const CURVE = 0.25;         // weniger hyper-sensitiv
-const ATTACK = 0.55;
-const RELEASE = 0.10;
-const MIN_SCALE = 0.78;     // WICHTIG: nicht so klein -> weniger eng
-const MAX_SCALE = 1.42;     // nur leichtes “atmen”
-const WOBBLE = 0.04;    // extra vibration
+// These values control how the room reacts to the audio.
 
-let env = 0; // envelope 0..1
-let roomBaseScale = 1;
+const VOLUME_BOOST = 7.0;   // Amplifies the incoming sound signal.
+const CURVE = 0.25;         // Controls sensitivity of the volume mapping.
+const ATTACK = 0.55;        // How fast the room reacts to louder sound.
+const RELEASE = 0.10;       // How fast it relaxes when sound drops.
+const MIN_SCALE = 0.78;     // Smallest size the room can shrink to.
+const MAX_SCALE = 1.42;     // Maximum size the room can expand to.
+const WOBBLE = 0.04;        // Adds slight vibration for tension effect.
 
-init();
-loadRoom();
+let env = 0;                // Smoothed audio envelope (0–1).
+let roomBaseScale = 1;      // Default room scale before audio changes.
+
+init();                     // Initializes scene setup.
+loadRoom();                 // Loads the 3D room model.
 animate();
 
 function init() {
@@ -247,8 +248,8 @@ function getVolume01() {
   return clamp(rms * VOLUME_BOOST, 0, 1);
 }
 
-// Scale the room around the camera position (robust pivot method)
-// Recommended: scale X/Z only so it feels like walls closing, not "zooming"
+// Scale the room around the camera position
+// only X/Z scale
 function applyScaleAroundCamera(s) {
   if (!roomPivot) return;
 
@@ -257,8 +258,6 @@ function applyScaleAroundCamera(s) {
   // Option A: “walls close in” (best feel)
   roomPivot.scale.set(sc, 1.0, sc);
 
-  // Option B (if you want full uniform squeeze instead):
-  // roomPivot.scale.setScalar(sc);
 }
 
 function animate() {
@@ -286,11 +285,6 @@ function animate() {
 
   applyScaleAroundCamera(scale);
 
-  // Optional: look -> audio filter only
-  //if (lowpass) {
-   // const look = Math.min(1, (Math.abs(yaw) + Math.abs(pitch)) / Math.PI);
-    //lowpass.frequency.value = clamp(700 + look * 1700, 700, 2600);
-  //}
 
   renderer.render(scene, camera);
 }
