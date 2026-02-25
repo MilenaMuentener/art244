@@ -9,8 +9,8 @@ let video2
 function preload()
 {
 audio = loadSound('./assets/ambient.mp3')
-img1 = loadImage('./assets/starry.jpg')
-img2 = loadImage('./assets/nylon.png')
+img1 = loadImage('./assets/Image0.png')
+img2 = loadImage('./assets/Image1.png')
 video1 = createVideo('./assets/vase.webm')
 video2 = createVideo('./assets/tennis.webm')
 
