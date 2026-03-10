@@ -6,6 +6,11 @@ let timestamp
 let video1
 let video2
 
+
+let analyser
+let fft
+
+
 function preload()
 {
 audio = loadSound('./assets/ambient.mp3')
@@ -20,9 +25,14 @@ function setup ()
 {
  createCanvas(displayWidth, displayHeight)
  let button = createImg("./assets/play.jpg")
- button.size(60,40)
+ button.size(100,60)
  button.position(100,100)
  button.mousePressed(playaudio)
+
+ analyzer = new p5.Amplitude()
+ analyzer.setInput(audio)
+ fft = new p5.FFT()
+
 
 }
 
@@ -45,6 +55,7 @@ function draw ()
   if (timestamp>10 && timestamp < 33)
     {
       playvideo1()
+      waveform()
     }
 
     if (timestamp>33 && timestamp < 45)
@@ -103,3 +114,16 @@ function playvideo2 ()
    let vidbuffer = video2.get()
    image(vidbuffer, 0, 0)
 }
+
+function waveform() {
+    level = analyzer.getLevel();
+    spectrum = fft.analyze();
+    noStroke();
+    for (i = 0; i < spectrum.length; i = i + 1) {
+    x = map(i, 0, spectrum.length, 0, width);
+    y = map(spectrum[i], 0, 255, height, 0) - height;
+    rect(x, height, width / spectrum.length, y);
+    }
+
+
+    }
