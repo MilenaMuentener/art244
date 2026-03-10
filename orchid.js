@@ -17,20 +17,20 @@ function preload() {
 
   video1 = createVideo('./assets/startorchid.webm')
   video2 = createVideo('./assets/orchidzoom.webm')
-  video3 = createVideo ('./assets/orchidzoom2.webm')
-  video4 = createVideo ('./assets/orchid4video.webm')
-  video5 = createVideo ('./assets/video5orchid.webm')
+  video3 = createVideo('./assets/orchidzoom2.webm')
+  video4 = createVideo('./assets/orchid4video.webm')
+  video5 = createVideo('./assets/video5orchid.webm')
 }
 
 function setup() {
   createCanvas(displayWidth, displayHeight)
 
   let button = createImg("./assets/playpause.png")
-button.size(70, 60)
-button.position(100, 100)
-button.style("background-color", "rgba(255,255,255,0.6)")
-button.style("border-radius", "18px")
-button.mousePressed(playaudio)
+  button.size(70, 60)
+  button.position(100, 100)
+  button.style("background-color", "rgba(255,255,255,0.6)")
+  button.style("border-radius", "18px")
+  button.mousePressed(playaudio)
 
   colorMode(HSB, 360, 100, 100, 100)
   noStroke()
@@ -50,7 +50,6 @@ button.mousePressed(playaudio)
 
   video4.loop()
   video4.hide()
-
 
   video5.loop()
   video5.hide()
@@ -99,13 +98,16 @@ function draw() {
     playvideo4()
     purpleOverlay(level)
   }
+
   if (timestamp > 38 && timestamp < 45) {
     dreamyTransition(level)
   }
+
   if (timestamp > 45 && timestamp < 51) {
     playvideo3()
     purpleOverlay(level)
   }
+
   if (timestamp > 51 && timestamp < 57) {
     dreamyTransition(level)
   }
@@ -133,6 +135,7 @@ function draw() {
     playvideo3()
     blueOverlay(level)
   }
+
   if (timestamp > 86 && timestamp < 90) {
     playvideo1()
     purpleOverlay(level)
@@ -141,10 +144,12 @@ function draw() {
   if (timestamp > 90 && timestamp < 96) {
     dreamyTransition(level)
   }
+
   if (timestamp > 96 && timestamp < 102) {
     playvideo2()
     blueOverlay(level)
   }
+
   if (timestamp > 102 && timestamp < 108) {
     dreamyTransition(level)
   }
@@ -162,6 +167,7 @@ function draw() {
   if (timestamp > 122 && timestamp < 125) {
     dreamyTransition(level)
   }
+
   if (timestamp > 125 && timestamp < 130) {
     playvideo4()
     blueOverlay(level)
@@ -175,12 +181,13 @@ function draw() {
   if (timestamp > 135 && timestamp < 140) {
     dreamyTransition(level)
   }
-
   if (timestamp > 140 && timestamp < 146) {
-    playvideo5()
+    playvideo2()
     blueOverlay(level)
   }
-
+  if (timestamp > 146 && timestamp < 158) {
+    showCredits()
+  }
 }
 
 function playaudio() {
@@ -191,14 +198,13 @@ function playaudio() {
     video3.pause()
     video4.pause()
     video5.pause()
-
   } else {
     audio.loop()
     video1.loop()
     video2.loop()
-    video3.loop ()
-    video4.loop ()
-    video5.loop ()
+    video3.loop()
+    video4.loop()
+    video5.loop()
   }
 }
 
@@ -221,6 +227,7 @@ function playvideo2() {
   image(vidbuffer, 0, 0, width, height)
   pop()
 }
+
 function playvideo3() {
   video3.size(displayWidth, displayHeight)
   let vidbuffer = video3.get()
@@ -355,6 +362,29 @@ function abstractBlueScene(level) {
   pop()
 }
 
+function showCredits() {
+  background(245, 20, 15)
+
+  let alpha = map(timestamp, 140, 146, 0, 100)
+  alpha = constrain(alpha, 0, 100)
+
+  push()
+  textAlign(CENTER, CENTER)
+  fill(0, 0, 100, alpha)
+
+  textSize(42)
+  text("Credits", width / 2, height / 2 - 90)
+
+  textSize(24)
+  text("Flower reference: Vanda coerulea bloom", width / 2, height / 2 - 20)
+  text("Source: Smithsonian 3D", width / 2, height / 2 + 20)
+
+  textSize(16)
+  text("3d.si.edu/object/3d/vanda-coerulea-bloom", width / 2, height / 2 + 65)
+
+  pop()
+}
+
 /* ---------------------- CLASS ---------------------- */
 
 class InkBlob {
@@ -408,7 +438,13 @@ class InkBlob {
   drawOrganicShape() {
     beginShape()
     for (let a = 0; a < TWO_PI; a += 0.25) {
-      let noiseFactor = map(noise(cos(a) + 1, sin(a) + 1, frameCount * 0.01 + this.offset), 0, 1, 0.75, 1.25)
+      let noiseFactor = map(
+        noise(cos(a) + 1, sin(a) + 1, frameCount * 0.01 + this.offset),
+        0,
+        1,
+        0.75,
+        1.25
+      )
       let r = this.size * noiseFactor
       let px = this.x + cos(a) * r
       let py = this.y + sin(a) * r

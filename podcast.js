@@ -125,5 +125,4 @@ function waveform() {
     rect(x, height, width / spectrum.length, y);
     }
 
-
     }
