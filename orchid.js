@@ -1,5 +1,5 @@
 let audio
-let timestamp
+let timestamp = 0
 
 let video1
 let video2
@@ -9,8 +9,44 @@ let video5
 
 let analyzer
 let fft
+let playButton
 
 let inkBlobs = []
+
+// langsameres Timing für deine Stimme
+let captions = [
+  { start: 8, end: 10.5, text: "Hello everyone, and welcome." },
+
+  { start: 10.5, end: 15, text: "Today I want to show you a very special orchid" },
+  { start: 15, end: 20, text: "called Vanda coerulea, also known as the blue orchid." },
+
+  { start: 20, end: 24.5, text: "What makes this flower so interesting is its color." },
+  { start: 24.5, end: 28.5, text: "The deep blue tone is very rare in nature," },
+  { start: 28.5, end: 32.5, text: "which is why this orchid attracted so much attention" },
+  { start: 32.5, end: 35.5, text: "from scientists and collectors." },
+
+  { start: 35.5, end: 40, text: "The plant was first scientifically described in 1847" },
+  { start: 40, end: 43.5, text: "by the botanist John Lindley." },
+  { start: 43.5, end: 48.5, text: "It originally grows in the Khasi Hills in northeast India." },
+
+  { start: 48.5, end: 51.5, text: "When it was later introduced to Europe," },
+  { start: 51.5, end: 56.5, text: "many botanists and plant collectors became fascinated by it." },
+
+  { start: 56.5, end: 62, text: "During the 19th century, orchids became extremely popular." },
+  { start: 62, end: 66.5, text: "This period was sometimes called 'orchid mania'," },
+  { start: 66.5, end: 72, text: "because many people wanted rare and unusual plants for their collections." },
+
+  { start: 72, end: 75.5, text: "Since blue orchids are so uncommon," },
+  { start: 75.5, end: 79, text: "Vanda coerulea became especially valuable." },
+
+  { start: 79, end: 85, text: "In parts of India, the orchid was not only admired for its beauty" },
+  { start: 85, end: 88, text: "but also used in traditional medicine." },
+
+  { start: 88, end: 92, text: "What makes this flower interesting is that it shows" },
+  { start: 92, end: 98.5, text: "how people are often drawn to rare and beautiful things in nature." },
+  { start: 98.5, end: 101.5, text: "Even a single flower can tell a much bigger story" },
+  { start: 101.5, end: 105, text: "about science, exploration, and collecting." }
+]
 
 function preload() {
   audio = loadSound('./assets/orchidsound.mp3')
@@ -23,92 +59,92 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(displayWidth, displayHeight)
+  createCanvas(windowWidth, windowHeight)
 
-  let button = createImg("./assets/playpause.png")
-  button.size(70, 60)
-  button.position(100, 100)
-  button.style("background-color", "rgba(255,255,255,0.6)")
-  button.style("border-radius", "18px")
-  button.mousePressed(playaudio)
+  playButton = createImg("./assets/playpause.png")
+  updateButtonLayout()
+  playButton.style("background-color", "rgba(255,255,255,0.6)")
+  playButton.style("border-radius", "18px")
+  playButton.style("padding", "6px")
+  playButton.style("z-index", "10")
+  playButton.mousePressed(playaudio)
 
   colorMode(HSB, 360, 100, 100, 100)
+  rectMode(CENTER)
   noStroke()
 
   analyzer = new p5.Amplitude()
   analyzer.setInput(audio)
   fft = new p5.FFT()
+  fft.setInput(audio)
 
-  video1.loop()
-  video1.hide()
-
-  video2.loop()
-  video2.hide()
-
-  video3.loop()
-  video3.hide()
-
-  video4.loop()
-  video4.hide()
-
-  video5.loop()
-  video5.hide()
+  setupVideo(video1)
+  setupVideo(video2)
+  setupVideo(video3)
+  setupVideo(video4)
+  setupVideo(video5)
 
   for (let i = 0; i < 12; i++) {
     inkBlobs.push(new InkBlob())
   }
 }
 
+function setupVideo(vid) {
+  vid.volume(0)
+  vid.loop()
+  vid.hide()
+}
+
 function draw() {
   background(230, 20, 98)
 
   timestamp = audio.currentTime()
-  console.log(timestamp)
-
+  let duration = audio.duration() || 0
   let level = analyzer.getLevel()
 
-  if (timestamp > 0 && timestamp < 6.5) {
+  if (timestamp > 0 && timestamp < 5) {
     playvideo1()
     blueOverlay(level)
   }
 
-  if (timestamp > 6.5 && timestamp < 10) {
+  if (timestamp > 5 && timestamp < 8) {
     dreamyTransition(level)
   }
 
-  if (timestamp > 10 && timestamp < 16) {
+  if (timestamp > 8 && timestamp < 15) {
     playvideo2()
     purpleOverlay(level)
   }
 
-  if (timestamp > 16 && timestamp < 20) {
-    dreamyTransition(level)
+  if (timestamp > 15 && timestamp < 23) {
+    playvideo5()
+    blueOverlay(level)
   }
 
-  if (timestamp > 20 && timestamp < 26) {
+  if (timestamp > 15 && timestamp < 20) {
     playvideo3()
     purpleOverlay(level)
   }
 
-  if (timestamp > 26 && timestamp < 31) {
+  if (timestamp > 20 && timestamp < 25) {
     dreamyTransition(level)
   }
 
-  if (timestamp > 31 && timestamp < 38) {
+  if (timestamp > 25 && timestamp < 31) {
     playvideo4()
     purpleOverlay(level)
   }
 
-  if (timestamp > 38 && timestamp < 45) {
+  if (timestamp > 31 && timestamp < 37) {
     dreamyTransition(level)
   }
 
-  if (timestamp > 45 && timestamp < 51) {
+  if (timestamp > 37 && timestamp < 43) {
     playvideo3()
     purpleOverlay(level)
   }
 
-  if (timestamp > 51 && timestamp < 57) {
+  if (timestamp > 43 && timestamp < 57) {
     dreamyTransition(level)
   }
 
@@ -159,101 +195,70 @@ function draw() {
     purpleOverlay(level)
   }
 
-  if (timestamp > 116 && timestamp < 122) {
+  if (timestamp > 116 && timestamp < max(duration - 4, 116)) {
     playvideo3()
     blueOverlay(level)
   }
 
-  if (timestamp > 122 && timestamp < 125) {
-    dreamyTransition(level)
-  }
-
-  if (timestamp > 125 && timestamp < 130) {
-    playvideo4()
-    blueOverlay(level)
-  }
-
-  if (timestamp > 130 && timestamp < 135) {
-    playvideo2()
-    purpleOverlay(level)
-  }
-
-  if (timestamp > 135 && timestamp < 140) {
-    dreamyTransition(level)
-  }
-  if (timestamp > 140 && timestamp < 146) {
-    playvideo2()
-    blueOverlay(level)
-  }
-  if (timestamp > 146 && timestamp < 158) {
+  if (duration > 0 && timestamp >= duration - 4 && timestamp <= duration) {
     showCredits()
   }
+
+  subtitles()
 }
 
 function playaudio() {
   if (audio.isPlaying()) {
     audio.pause()
-    video1.pause()
-    video2.pause()
-    video3.pause()
-    video4.pause()
-    video5.pause()
+    pauseAllVideos()
   } else {
-    audio.loop()
-    video1.loop()
-    video2.loop()
-    video3.loop()
-    video4.loop()
-    video5.loop()
+    audio.play()
+    resumeAllVideos()
   }
 }
 
-function playvideo1() {
-  video1.size(displayWidth, displayHeight)
-  let vidbuffer = video1.get()
+function pauseAllVideos() {
+  video1.pause()
+  video2.pause()
+  video3.pause()
+  video4.pause()
+  video5.pause()
+}
 
-  push()
-  tint(210, 40, 100, 95)
-  image(vidbuffer, 0, 0, width, height)
-  pop()
+function resumeAllVideos() {
+  video1.loop()
+  video2.loop()
+  video3.loop()
+  video4.loop()
+  video5.loop()
+}
+
+function playvideo1() {
+  drawVideo(video1, 210)
 }
 
 function playvideo2() {
-  video2.size(displayWidth, displayHeight)
-  let vidbuffer = video2.get()
-
-  push()
-  tint(260, 35, 100, 95)
-  image(vidbuffer, 0, 0, width, height)
-  pop()
+  drawVideo(video2, 260)
 }
 
 function playvideo3() {
-  video3.size(displayWidth, displayHeight)
-  let vidbuffer = video3.get()
-
-  push()
-  tint(260, 35, 100, 95)
-  image(vidbuffer, 0, 0, width, height)
-  pop()
+  drawVideo(video3, 260)
 }
 
 function playvideo4() {
-  video4.size(displayWidth, displayHeight)
-  let vidbuffer = video4.get()
-
-  push()
-  tint(260, 35, 100, 95)
-  image(vidbuffer, 0, 0, width, height)
-  pop()
+  drawVideo(video4, 260)
 }
 
 function playvideo5() {
-  video5.size(displayWidth, displayHeight)
-  let vidbuffer = video5.get()
+  drawVideo(video5, 260)
+}
+
+function drawVideo(video, hueValue) {
+  video.size(width, height)
+  let vidbuffer = video.get()
 
   push()
-  tint(260, 35, 100, 95)
+  tint(hueValue, 35, 100, 95)
   image(vidbuffer, 0, 0, width, height)
   pop()
 }
@@ -281,8 +286,8 @@ function blueOverlay(level) {
     blob.displayBlue()
   }
 
-  fill(220, 50, 100, 8)
-  rect(0, 0, width, height)
+  fill(220, 40, 100, 10)
+  rect(width / 2, height / 2, width, height)
 
   pop()
 }
@@ -297,7 +302,7 @@ function purpleOverlay(level) {
   }
 
   fill(270, 40, 100, 10)
-  rect(0, 0, width, height)
+  rect(width / 2, height / 2, width, height)
 
   pop()
 }
@@ -323,6 +328,39 @@ function dreamyTransition(level) {
     blob.displayBluePurple()
   }
   pop()
+}
+
+function subtitles() {
+  let activeCaption = ""
+
+  for (let c of captions) {
+    if (timestamp >= c.start && timestamp <= c.end) {
+      activeCaption = c.text
+      break
+    }
+  }
+
+  if (activeCaption !== "") {
+    let boxW = min(width * 0.82, 900)
+    let boxH = max(80, height * 0.12)
+    let yPos = height * 0.72
+    let textPadding = boxW * 0.08
+    let fontSize = constrain(width * 0.022, 18, 30)
+
+    push()
+    rectMode(CENTER)
+    textAlign(CENTER, CENTER)
+    textSize(fontSize)
+    textLeading(fontSize * 1.3)
+
+    fill(0, 0, 0, 72)
+    noStroke()
+    rect(width / 2, yPos, boxW, boxH, 18)
+
+    fill(0, 0, 100)
+    text(activeCaption, width / 2, yPos, boxW - textPadding, boxH - 20)
+    pop()
+  }
 }
 
 function abstractBlueScene(level) {
@@ -365,24 +403,54 @@ function abstractBlueScene(level) {
 function showCredits() {
   background(245, 20, 15)
 
-  let alpha = map(timestamp, 140, 146, 0, 100)
+  let duration = audio.duration() || 0
+  let alpha = map(timestamp, duration - 4, duration, 0, 100)
   alpha = constrain(alpha, 0, 100)
+
+  let titleSize = constrain(width * 0.04, 28, 42)
+  let bodySize = constrain(width * 0.022, 16, 24)
+  let smallSize = constrain(width * 0.016, 12, 16)
 
   push()
   textAlign(CENTER, CENTER)
   fill(0, 0, 100, alpha)
 
-  textSize(42)
-  text("Credits", width / 2, height / 2 - 90)
+  textSize(titleSize)
+  text("Credits", width / 2, height * 0.32)
 
-  textSize(24)
-  text("Flower reference: Vanda coerulea bloom", width / 2, height / 2 - 20)
-  text("Source: Smithsonian 3D", width / 2, height / 2 + 20)
+  textSize(bodySize)
+  text("Flower reference: Vanda coerulea bloom", width / 2, height * 0.44)
+  text("Source: Smithsonian 3D", width / 2, height * 0.49)
 
-  textSize(16)
-  text("3d.si.edu/object/3d/vanda-coerulea-bloom", width / 2, height / 2 + 65)
+  textSize(smallSize)
+  text("3d.si.edu/object/3d/vanda-coerulea-bloom", width / 2, height * 0.56, width * 0.8)
+
+  textSize(bodySize)
+  text("Sound source:", width / 2, height * 0.66)
+
+  textSize(smallSize + 2)
+  text('"April Showers: Sweet Lo-Fi Piano Vibes"', width / 2, height * 0.73, width * 0.8)
+  text("by kjartan_abel on freesound.org", width / 2, height * 0.79)
 
   pop()
+}
+
+/* ---------------------- RESPONSIVE ---------------------- */
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight)
+  updateButtonLayout()
+}
+
+function updateButtonLayout() {
+  let btnW = constrain(windowWidth * 0.06, 52, 72)
+  let btnH = btnW * 0.86
+  let margin = constrain(windowWidth * 0.025, 16, 32)
+
+  if (playButton) {
+    playButton.size(btnW, btnH)
+    playButton.position(margin, margin)
+  }
 }
 
 /* ---------------------- CLASS ---------------------- */
@@ -437,15 +505,8 @@ class InkBlob {
 
   drawOrganicShape() {
     beginShape()
-    for (let a = 0; a < TWO_PI; a += 0.25) {
-      let noiseFactor = map(
-        noise(cos(a) + 1, sin(a) + 1, frameCount * 0.01 + this.offset),
-        0,
-        1,
-        0.75,
-        1.25
-      )
-      let r = this.size * noiseFactor
+    for (let a = 0; a < TWO_PI; a += 0.3) {
+      let r = this.size + sin(a * 3 + frameCount * 0.02 + this.offset) * 25
       let px = this.x + cos(a) * r
       let py = this.y + sin(a) * r
       curveVertex(px, py)

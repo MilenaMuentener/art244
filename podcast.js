@@ -33,7 +33,6 @@ function setup ()
  analyzer.setInput(audio)
  fft = new p5.FFT()
 
-
 }
 
 function draw ()
